@@ -1,66 +1,62 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/bMYWKvYv)
-# Interim Assessment: Full-Stack Integration – Coinbase Clone
+# Coinbase Clone — Backend API
 
-In this assignment, you will integrate your cloned coinbase frontend with a backend API to build a functional cryptocurrency platform with authentication and dynamic data.
+Node.js/Express REST API with MongoDB for the Coinbase Clone project.
 
-You are required to implement the features using Node.js with MongoDB as the database. Create proper data models (schemas) and structure your project using best practices (models, routes, and controllers). All features must be exposed through RESTful APIs for the frontend to consume.
+## Tech Stack
+- **Runtime**: Node.js (v18+)
+- **Framework**: Express.js
+- **Database**: MongoDB (via Mongoose)
+- **Auth**: JWT (HTTP-only cookies)
 
-## 1. Authentication System (JWT-Based)
+## Setup
 
-### Register (GET /register)
+```bash
+npm install
+cp .env.example .env   # fill in your values
+npm start
+```
 
-Create a user account using:
+## Environment Variables
 
-- Name
-- Email
-- Password
+| Variable        | Description                                  |
+|-----------------|----------------------------------------------|
+| `MONGODB_URI`   | MongoDB Atlas connection string              |
+| `JWT_SECRET`    | Long random string for signing JWT tokens    |
+| `CLIENT_ORIGIN` | Frontend URL (e.g. https://your-site.netlify.app) |
+| `NODE_ENV`      | Set to `production` on Render                |
 
-Send data to the backend API and ensure it is properly stored in the database. Also handle success and error responses appropriately, returning clear and meaningful feedback based on the outcome of each request.
+## API Endpoints
 
-### Login (GET /login)
+### Auth
+| Method | Route       | Description                        |
+|--------|-------------|------------------------------------|
+| POST   | /register   | Create a new user account          |
+| POST   | /login      | Authenticate and receive JWT cookie|
+| POST   | /logout     | Clear the auth cookie              |
+| GET    | /profile    | Get current user (auth required)   |
 
-Authenticate users using email and password, store the returned JWT token securely (preferably using HTTP-only cookies), and redirect the user to the homepage after a successful login.
+### Crypto
+| Method | Route           | Description                        |
+|--------|-----------------|------------------------------------|
+| GET    | /crypto         | All cryptocurrencies (paginated)   |
+| GET    | /crypto/gainers | Top gainers sorted by 24h change   |
+| GET    | /crypto/new     | Newest listings                    |
+| POST   | /crypto         | Add a new cryptocurrency           |
 
-## 2. Protected User Profile Page
+## Deployment (Railway)
 
-### Create a User Dashboard/Profile Page(GET /profile)
+1. Push this repo to GitHub Classroom (or any GitHub repo).
+2. Go to [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub repo**.
+3. Select this repository.
+4. Set the following environment variables in the Railway dashboard (**Variables** tab):
 
-Fetch and display:
+| Variable        | Value                                              |
+|-----------------|----------------------------------------------------|
+| `MONGODB_URI`   | Your MongoDB Atlas connection string               |
+| `JWT_SECRET`    | A long random secret string                        |
+| `CLIENT_ORIGIN` | Your deployed frontend URL (e.g. Netlify URL)      |
+| `NODE_ENV`      | `production`                                       |
 
-- User name
-- Email
-- Any other relevant info from backend
-
-**NOTE:** This page must be protected and only accessible to authenticated users with a valid JWT token. If the user is not authenticated, they should be redirected to the login page.
-
-## 3. Crypto Data Integration
-
-### GET /crypto (All Tradable Cryptocurrencies)
-
-Fetch all available cryptocurrencies from the backend and display them on the frontend.
-
-### GET /crypto/gainers (Top Gainers)
-
-Fetch cryptocurrencies with the highest percentage increase in price, sorted from highest to lowest.
-
-### GET /crypto/new (New Listings)
-
-Fetch the most recently added cryptocurrencies, sorted from newest to oldest.
-
-### POST /crypto (Add New Cryptocurrency)
-
-Create a new cryptocurrency using:
-
-- Name
-- Symbol
-- Price
-- Image
-- 24h Change (percentage change in price over the last 24 hours, e.g. +2.5)
-
-Send data to the backend API and ensure it is properly stored in the database (MongoDB). Also handle success and error responses appropriately, returning clear and meaningful feedback based on the outcome of each request.
-
----
-
-Push your backend code to GitHub Classroom, deploy the backend (recommended: Render), and integrate it into your Coinbase clone frontend repository. After completing the integration, deploy the updated frontend as well. Finally, submit the links to your deployed backend, deployed frontend, and your updated Coinbase clone repository via the Google Form attached.
-
-**NOTE:** Ensure that all submitted links are accurate and working, as no marks will be awarded for invalid or inaccessible submissions.
+5. Railway will auto-detect Node.js, run `npm install`, and start with `node index.js` (via `railway.json`).
+6. Once deployed, click **Generate Domain** in the Railway dashboard to get your public URL.
+7. Visit `https://your-app.up.railway.app/health` — it should return `{"message":"API is running."}`.
